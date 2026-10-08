@@ -1,0 +1,115 @@
+select user FROM dual;
+
+
+SELECT table_name, tablespace_name
+FROM user_tables;
+
+DROP TABLE detalles_ventas CASCADE CONSTRAINTS;
+DROP TABLE venta CASCADE CONSTRAINTS;
+DROP TABLE carrito CASCADE CONSTRAINTS;
+DROP TABLE producto CASCADE CONSTRAINTS;
+DROP TABLE cliente CASCADE CONSTRAINTS;
+
+-- 2. Borrar Secuencias (para que se reinicien desde el número 5)
+DROP SEQUENCE secuencia_producto;
+DROP SEQUENCE secuencia_carrito;
+DROP SEQUENCE secuencia_venta;
+DROP SEQUENCE secuencia_detalle_venta;
+
+
+
+
+
+-- CREACION DE LAS TABLAS 
+CREATE TABLE cliente(
+rut_cliente        NUMBER          PRIMARY KEY,
+nombre             VARCHAR2(50)    NOT NULL,
+apellido           VARCHAR2(50)    NOT NULL,
+correo_electronico VARCHAR2(50)
+);
+
+CREATE TABLE producto(
+id_producto        NUMBER          PRIMARY KEY,
+nombre             VARCHAR2(50)    NOT NULL,
+precio             NUMBER          NOT NULL,
+stock              NUMBER          NOT NULL,
+descripccion       CLOB 
+);
+CREATE SEQUENCE secuencia_producto
+START WITH 5
+INCREMENT BY 5
+MAXVALUE 9000;
+
+CREATE TABLE carrito(
+id_carrito         NUMBER          PRIMARY KEY,
+rut_cliente        NUMBER          NOT NULL,
+id_producto        NUMBER          NOT NULL,
+
+cantidad           NUMBER          NOT NULL    ,
+
+CONSTRAINT    fk_cliente_carito
+FOREIGN KEY   (rut_cliente)
+REFERENCES    cliente(rut_cliente),
+
+CONSTRAINT    fk_producto_carito
+FOREIGN KEY   (id_producto)
+REFERENCES    producto(id_producto)
+);
+CREATE SEQUENCE secuencia_carrito
+START WITH 5
+INCREMENT BY 5
+MAXVALUE 9000;
+
+
+CREATE TABLE venta(
+id_venta           NUMBER          PRIMARY KEY NOT NULL,
+rut_cliente        NUMBER          NOT NULL,
+fecha              DATE            DEFAULT SYSDATE,
+total              NUMBER ,
+
+CONSTRAINT    fk_venta_cliente
+FOREIGN KEY   (rut_cliente)
+REFERENCES    cliente(rut_cliente)
+);
+CREATE SEQUENCE secuencia_venta
+START WITH 5
+INCREMENT BY 5
+MAXVALUE 9000;
+
+CREATE TABLE detalles_ventas(
+id_detalles_ven    NUMBER          PRIMARY KEY  NOT NULL,
+id_venta           NUMBER          NOT NULL,
+id_producto        NUMBER          NOT NULL,
+cantidad           NUMBER          NOT NULL ,   
+
+
+precio_unitario    NUMBER ,
+
+CONSTRAINT    fk_detalles_venta_venta
+FOREIGN KEY   (id_venta)
+REFERENCES    venta(id_venta),
+
+CONSTRAINT    fk_detalles_venta_producto
+FOREIGN KEY   (id_producto)
+REFERENCES    producto(id_producto)
+);
+CREATE SEQUENCE sequencia_detalles_ventas
+START WITH 5
+INCREMENT BY 5
+MAXVALUE 9000;
+
+
+-- Clientes iniciales (Ingreso de RUT directo)
+INSERT INTO cliente (rut_cliente, nombre, apellido, correo_electronico) 
+VALUES (19222333, 'Juan', 'Pérez', 'juan.perez@inacapmail.cl');
+
+INSERT INTO cliente (rut_cliente, nombre, apellido, correo_electronico) 
+VALUES (20444555, 'María', 'Soto', 'maria.soto@inacapmail.cl');
+
+-- Catálogo de productos básico (Usan secuencia_producto.NEXTVAL -> Genera IDs: 5 y 10)
+INSERT INTO producto (id_producto, nombre, precio, stock, descripccion) 
+VALUES (secuencia_producto.NEXTVAL, 'Polerón Institucional INACAP', 24990, 15, 'Polerón azul marino con logo bordado.');
+
+INSERT INTO producto (id_producto, nombre, precio, stock, descripccion) 
+VALUES (secuencia_producto.NEXTVAL, 'Mochila Porta Notebook', 19990, 10, 'Mochila impermeable con compartimiento acolchado.');
+COMMIT;
