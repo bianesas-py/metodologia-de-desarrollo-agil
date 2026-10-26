@@ -1,0 +1,7 @@
+A continuacion se mostrara como iniciar el programa E-commerce 
+
+
+1) Se debe descargar y extrare el archivo Proyecto e-commerce/html y agregar el archivo a vscode
+2) Se debe abrir una terminal con ctrl + ñ
+3) Se debe ejecutar el comando "pip install flask"
+4) Se debe ejecutar el comando "python app.py"
