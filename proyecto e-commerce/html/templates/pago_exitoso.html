@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pago Confirmado - Ina-commerce</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f6f9; text-align: center; padding-top: 50px; }
+    .tarjeta-exito { max-width: 450px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .icono { font-size: 60px; color: #28a745; margin-bottom: 10px; }
+    .btn-volver { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #ff4747; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="tarjeta-exito">
+    <div class="icono">✅</div>
+    <h2>¡Pago Aprobado!</h2>
+    <p>Gracias por tu compra en <strong>Ina-commerce</strong>.</p>
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+    <p><strong>Comprador:</strong> {{ titular }}</p>
+    <p><strong>Método de pago:</strong> Tarjeta {{ tarjeta_oculta }}</p>
+    <p><strong>Estado:</strong> Transacción simulada con éxito</p>
+    
+    <a href="/" class="btn-volver">Volver al Catálogo</a>
+  </div>
+
+</body>
+</html>

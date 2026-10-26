@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ producto.nombre }} - Ina-commerce</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+    <link rel="icon" type="image/jpeg" href="/static/fotos/WhatsApp Image 2026-10-21 at 00.43.19 (1).jpeg">
+</head>
+
+<body>
+    <div style="padding: 15px 30px; background-color: #ff4747; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center;">
+        <a href="/" style="color: #fff; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 15px;">← Volver al Catálogo (Ina-commerce)</a>
+        <a href="/carrito" style="color: #fff; text-decoration: none; font-weight: bold; font-family: sans-serif; font-size: 15px;">🛒 Ver Carrito ({{ total_items_carrito }})</a>
+    </div>
+
+    <div class="producto">
+
+        <div class="video-mando">
+            <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+
+            {% if producto.video and producto.video != '' %}
+            <video controls autoplay loop>
+                <source src="{{ producto.video }}" type="video/mp4">
+                Tu navegador no soporta videos.
+            </video>
+            {% endif %}
+        </div>
+
+        {% if producto.id == 2 or 'mando' in producto.nombre.lower() %}
+        <div class="perspectiva1">
+            <img src="/static/fotos/perspectica 1.jpg" alt="perspectiva 1">
+        </div>
+
+        <div class="perspectiva2">
+            <img src="/static/fotos/perspectiva 2.webp" alt="segunda perspectiva del mando">
+        </div>
+
+        <div class="perspectiva3">
+            <img src="/static/fotos/perspectiva 3.jpg" alt="tercera perspectiva del mando">
+        </div>
+        {% endif %}
+
+        <div class="informacion">
+            <div class="encabezado">
+                <div>
+                    <h2 class="marca">Ina-commerce</h2>
+                    <p class="nombre">{{ producto.nombre }}</p>
+                </div>
+            </div>
+
+            <div class="caja-precio">
+                <span class="precio">${{ "{:,}".format(producto.precio).replace(",", ".") }}</span>
+                
+                {% if producto.descuento > 0 %}
+                <span class="descuento">-{{ producto.descuento }}%</span>
+                {% endif %}
+
+                <span class="metodo-de-pago">tarjeta/efectivo</span>
+                <span class="Despacho-domicilio">Despacho a domicilio</span>
+                <span class="retiro-tienda">retiro en tienda</span>
+                
+                <div class="foto-despacho">
+                    <img src="/static/fotos/despacho.png" alt="despacho a domicilio">
+                    <div class="foto-retiro-tienda">
+                        <img src="/static/fotos/retiro.jpg" alt="retiro en tienda">
+                    </div>
+                </div>
+
+                <a href="/agregar_al_carrito/{{ producto.id }}" style="display: block; width: 400px; padding: 12px; background: #28a745; color: white; text-align: center; text-decoration: none; font-weight: bold; border-radius: 100px; margin-top: 300px; box-sizing: border-box; transform: translate( 135px,0);">🛒 Agregar al Carrito</a>
+            </div>
+        </div>
+
+        <div class="menu-desplegable">
+            <details open>
+                <summary>Ver Descripción del producto</summary>
+
+                {% if producto.id == 2 or 'mando ps5' in producto.nombre.lower() %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dimensiones Externas</th>
+                            <td>Aprox. 160mm x 66mm x 106mm (ancho x alto x profundidad)</td>
+                        </tr>
+                        <tr>
+                            <th>Peso</th>
+                            <td>Aprox. 280g</td>
+                        </tr>
+                        <tr>
+                            <th>Botones</th>
+                            <td>Botón PS, botón Create, botón Options, botones direccionales
+                                (Arriba/Abajo/Izquierda/Derecha), botones de acción (Triángulo, Círculo,
+                                Cruz, Cuadrado), botones R1/L1, botones R2/L2 (con Trigger Effect), joystick
+                                izquierdo / botón L3, joystick derecho / botón R3, botón de Pad táctil,
+                                botón MUTE</td>
+                        </tr>
+                        <tr>
+                            <th>Pad Táctil</th>
+                            <td>Pad táctil de 2 puntos, tipo capacitivo, mecanismo de click</td>
+                        </tr>
+                        <tr>
+                            <th>Sensor de movimiento</th>
+                            <td>Sistema de detección de movimiento de seis ejes (giroscopio de tres ejes + acelerómetro de tres ejes)</td>
+                        </tr>
+                        <tr>
+                            <th>Audio</th>
+                            <td>Matriz de micrófonos integrada, altavoz mono integrado, conector para auriculares estéreo</td>
+                        </tr>
+                        <tr>
+                            <th>Retroalimentación</th>
+                            <td>Efecto de gatillo (en los botones R2/L2), vibración (retroalimentación háptica mediante actuadores dobles), indicadores</td>
+                        </tr>
+                        <tr>
+                            <th>Puertos</th>
+                            <td>Puerto USB Type-C, conector para auriculares estéreo, terminales de carga</td>
+                        </tr>
+                        <tr>
+                            <th>Conectividad</th>
+                            <td>Bluetooth Ver5.1 / Conexión USB (HID, Audio)</td>
+                        </tr>
+                        <tr>
+                            <th>Batería</th>
+                            <td>Batería de iones de litio recargable integrada (1,560mAh)</td>
+                        </tr>
+                    </thead>
+                </table>
+                {% else %}
+                <div style="background: #fff; padding: 20px; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd;">
+                    <p style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.6;">
+                        {{ producto.descripcion if producto.descripcion else 'Producto disponible en el catálogo oficial de Ina-commerce. Garantía y despacho inmediato.' }}
+                    </p>
+                </div>
+                {% endif %}
+            </details>
+        </div>
+
+    </div>
+</body>
+
+</html>

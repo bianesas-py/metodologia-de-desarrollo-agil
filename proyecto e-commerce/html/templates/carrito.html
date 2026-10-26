@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras - Ina-commerce</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='pagina-principal.css') }}">
+  <link rel="icon" type="image/jpeg" href="/static/fotos/favicon.jpeg">
+</head>
+<body style="background-color: #0f172a; color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">
+
+  <header class="header">
+    <div class="header-contenedor" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 15px 20px;">
+      <div class="logo">
+        <a href="/" style="font-size: 24px; font-weight: bold; color: #ffffff; text-decoration: none;">Ina-commerce</a>
+      </div>
+      <a href="/" style="color: #a5b4fc; text-decoration: none; font-weight: 600;">← Volver al Catálogo</a>
+    </div>
+  </header>
+
+  <main style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+    <h1 style="font-size: 28px; margin-bottom: 25px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px;">🛒 Tu Carrito de Compras</h1>
+
+    {% if items %}
+      <div style="background: rgba(30, 41, 59, 0.8); border-radius: 12px; padding: 20px; border: 1px solid rgba(165, 180, 252, 0.2);">
+        
+        {% for item in items %}
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 15px 0; flex-wrap: wrap; gap: 15px;">
+            
+            <!-- Foto y Nombre -->
+            <div style="display: flex; align-items: center; gap: 15px; width: 300px;">
+              <img src="{{ item.imagen }}" alt="{{ item.nombre }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; background: #000;">
+              <div>
+                <h3 style="font-size: 16px; margin: 0;">{{ item.nombre }}</h3>
+                <span style="font-size: 13px; color: #94a3b8;">Precio unitario: ${{ "{:,}".format(item.precio).replace(",", ".") }}</span>
+              </div>
+            </div>
+
+            <!-- Botones + y - para ajustar cantidad -->
+            <div style="display: flex; align-items: center; gap: 10px; background: #0f172a; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(165, 180, 252, 0.3);">
+              
+              <!-- Botón Restar (-) -->
+              <a href="/restar_del_carrito/{{ item.id }}" 
+                 style="background: #f43f5e; color: white; width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; font-size: 18px;">
+                 -
+              </a>
+
+              <!-- Cantidad cargada -->
+              <span style="font-size: 16px; font-weight: bold; min-width: 24px; text-align: center;">
+                {{ item.cantidad }}
+              </span>
+
+              <!-- Botón Sumar (+) -->
+              <a href="/agregar_al_carrito/{{ item.id }}" 
+                 style="background: #10b981; color: white; width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; font-size: 18px;">
+                 +
+              </a>
+            </div>
+
+            <!-- Subtotal -->
+            <div style="font-size: 16px; font-weight: bold; color: #34d399; width: 120px; text-align: right;">
+              ${{ "{:,}".format(item.subtotal).replace(",", ".") }}
+            </div>
+
+            <!-- Botón Eliminar fila -->
+            <a href="/eliminar_del_carrito/{{ item.id }}" style="color: #f43f5e; text-decoration: none; font-size: 18px;" title="Eliminar del carrito">🗑️</a>
+          </div>
+        {% endfor %}
+
+        <!-- Resumen Total y Acciones -->
+        <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+          <a href="/vaciar_carrito" style="color: #94a3b8; text-decoration: underline; font-size: 14px;">Vaciar carrito</a>
+
+          <div style="text-align: right;">
+            <p style="font-size: 20px; font-weight: bold; margin-bottom: 15px;">Total: <span style="color: #34d399;">${{ "{:,}".format(total).replace(",", ".") }}</span></p>
+            <a href="/pago" style="background: #28a745; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; display: inline-block;">💳 Ir a Pagar</a>
+          </div>
+        </div>
+
+      </div>
+    {% else %}
+      <div style="text-align: center; padding: 60px 20px; background: rgba(30, 41, 59, 0.5); border-radius: 12px;">
+        <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 20px;">Tu carrito está vacío.</p>
+        <a href="/" style="background: #6366f1; color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: bold;">Explorar Productos</a>
+      </div>
+    {% endif %}
+  </main>
+
+</body>
+</html>

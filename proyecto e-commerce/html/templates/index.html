@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ina-commerce - Tienda de Tecnología</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='pagina-principal.css') }}">
+  <link rel="icon" type="image/jpeg" href="/static/fotos/favicon.jpeg">
+</head>
+<body>
+
+  <div class="background">
+      <style>
+        body {
+          background-image: url(/static/fotos/fondo\ background.jpeg);
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+        }
+      </style>
+  </div>
+
+  <header class="header">
+    <div class="header-contenedor">
+      <div class="logo">
+        <a href="/">Ina-commerce <span></span></a>
+      </div>
+
+      <!-- Buscador activo con método GET -->
+      <form action="/" method="GET" class="buscador">
+        {% if categoria_sel %}<input type="hidden" name="categoria" value="{{ categoria_sel }}">{% endif %}
+        {% if orden %}<input type="hidden" name="orden" value="{{ orden }}">{% endif %}
+        <input type="text" name="q" value="{{ busqueda if busqueda else '' }}" placeholder="Buscar por nombre (ej: mando, carcasa)...">
+        <button type="submit">Buscar</button>
+      </form>
+
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <a href="/carrito" style="text-decoration: none; color: inherit;">
+          <div class="carrito-icono" style="cursor: pointer;">
+            🛒 <span>Carrito ({{ total_items_carrito }})</span>
+          </div>
+        </a>
+
+        {% if session.get('usuario_nombre') %}
+          <span style="color: #ffffff; font-size: 14px; font-weight: 600;">👋 {{ session['usuario_nombre'] }}</span>
+          <a href="/logout" style="color: #f43f5e; text-decoration: none; font-size: 14px; font-weight: bold; background: rgba(244, 63, 94, 0.15); padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(244, 63, 94, 0.3);">Salir</a>
+        {% else %}
+          <a href="/login" style="text-decoration: none; color: inherit;">
+            <div class="carrito-icono" style="cursor: pointer; background-color: rgba(244, 114, 182, 0.25); color: #f472b6; border-color: rgba(244, 114, 182, 0.4);">
+              👻 <span>Iniciar Sesión</span>
+            </div>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <section class="banner">
+    <h2>🔥 Ofertas de Tecnología 🔥</h2>
+    <p>Catálogo de Productos</p>
+  </section>
+
+  <main class="contenedor-principal">
+
+    <!-- Formulario de Publicación -->
+    <section class="seccion-formulario">
+      <h2>➕ Publicar Nuevo Producto</h2>
+      <p class="subtitulo-form">Ingresa los datos del artículo para enviarlo a la base de datos</p>
+
+      <form action="/agregar" method="POST" class="formulario-producto">
+        <div class="campo">
+          <label for="nombre">Nombre del producto:</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Ej: Mando PS4 DualShock" required>
+        </div>
+
+        <div class="campo">
+          <label for="precio">Precio ($ CLP):</label>
+          <input type="number" id="precio" name="precio" placeholder="Ej: 35990" required>
+        </div>
+
+        <div class="campo">
+          <label for="stock">Stock disponible:</label>
+          <input type="number" id="stock" name="stock" placeholder="Ej: 10" min="1" value="10" required>
+        </div>
+
+        <div class="campo">
+          <label for="categoria">Categoría:</label>
+          <select name="categoria" id="categoria" style="padding: 9px 12px; background-color: #0f172a; border: 1px solid rgba(165, 180, 252, 0.3); color: #ffffff; border-radius: 6px; font-size: 14px;">
+            {% for cat in categorias %}
+              <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="imagen_url">URL de la foto:</label>
+          <input type="url" id="imagen_url" name="imagen_url" placeholder="https://ejemplo.com/foto.jpg" required>
+        </div>
+
+        <div class="campo">
+          <label for="descripcion">Descripción del producto:</label>
+          <input type="text" id="descripcion" name="descripcion" placeholder="Ej: Mando inalámbrico con sensores de movimiento">
+        </div>
+
+        <button type="submit" class="btn-guardar">Guardar Producto</button>
+      </form>
+    </section>
+
+    <!-- Sección del Catálogo con Filtros Integrados -->
+    <section class="seccion-catalogo">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+
+        <!-- Título y Botón de Exportación CSV -->
+        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+          <h2>📦 Catálogo de Productos</h2>
+          <a href="/exportar_csv" style="color: #ffffff; font-size: 13px; text-decoration: none; font-weight: bold; background: #10b981; padding: 8px 14px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            📥 Exportar CSV
+          </a>
+        </div>
+
+        <!-- Panel de Filtros y Ordenamiento -->
+        <form action="/" method="GET" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          {% if busqueda %}<input type="hidden" name="q" value="{{ busqueda }}">{% endif %}
+
+          <select name="categoria" onchange="this.form.submit()" style="padding: 8px 12px; background-color: #0f172a; color: #ffffff; border: 1px solid rgba(165, 180, 252, 0.3); border-radius: 6px; font-size: 13px; cursor: pointer;">
+            <option value="">Todas las Categorías</option>
+            {% for cat in categorias %}
+              <option value="{{ cat }}" {% if categoria_sel == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+          </select>
+
+          <select name="orden" onchange="this.form.submit()" style="padding: 8px 12px; background-color: #0f172a; color: #ffffff; border: 1px solid rgba(165, 180, 252, 0.3); border-radius: 6px; font-size: 13px; cursor: pointer;">
+            <option value="">Ordenar Por...</option>
+            <option value="precio_asc" {% if orden == 'precio_asc' %}selected{% endif %}>Precio: Menor a Mayor</option>
+            <option value="precio_desc" {% if orden == 'precio_desc' %}selected{% endif %}>Precio: Mayor a Menor</option>
+            <option value="nombre" {% if orden == 'nombre' %}selected{% endif %}>Nombre A-Z</option>
+          </select>
+
+          {% if busqueda or categoria_sel or orden %}
+            <a href="/" style="color: #f43f5e; font-size: 13px; text-decoration: none; font-weight: bold; background: rgba(244, 63, 94, 0.15); padding: 7px 12px; border-radius: 6px; border: 1px solid rgba(244, 63, 94, 0.3);">✕ Limpiar Filtros</a>
+          {% endif %}
+        </form>
+      </div>
+
+      <div class="galeria">
+        {% for p in productos %}
+          <article class="tarjeta-producto">
+
+            {% if p.descuento and p.descuento > 0 %}
+              <span class="insignia-oferta">OFERTA -{{ p.descuento }}%</span>
+            {% endif %}
+
+            <div class="imagen-contenedor">
+              <a href="/producto/{{ p.id }}">
+                <img src="{{ p.imagen }}" alt="{{ p.nombre }}">
+              </a>
+            </div>
+
+            <div class="info-producto">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>
+                  <a href="/producto/{{ p.id }}" style="text-decoration: none; color: inherit;">{{ p.nombre }}</a>
+                </h3>
+                <!-- ID visible para gestión del administrador -->
+                <span style="font-size: 11px; color: #64748b; font-weight: bold; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">ID: #{{ p.id }}</span>
+              </div>
+
+              <div class="precio-contenedor">
+                <span class="precio">${{ "{:,}".format(p.precio).replace(",", ".") }}</span>
+              </div>
+
+              <!-- Indicador de Stock Visible -->
+              <p style="font-size: 13px; font-weight: 600; margin: 6px 0; color: {% if p.stock and p.stock > 0 %}#34d399{% else %}#f43f5e{% endif %};">
+                {% if p.stock and p.stock > 0 %}
+                  📦 Stock disponible: {{ p.stock }} unidades
+                {% else %}
+                  ❌ Agotado
+                {% endif %}
+              </p>
+
+              <p class="envio-gratis">Envío gratis</p>
+
+              <div style="display: flex; gap: 8px; flex-direction: column; margin-top: 10px;">
+                <a href="/producto/{{ p.id }}" class="btn-comprar" style="text-align: center; text-decoration: none; display: block;">Ver Detalle</a>
+
+                {% if p.stock and p.stock > 0 %}
+                  <a href="/agregar_al_carrito/{{ p.id }}" style="text-align: center; text-decoration: none; display: block; background: #28a745; color: white; padding: 10px; border-radius: 5px; font-weight: bold;">🛒 Agregar al Carrito</a>
+                {% else %}
+                  <span style="text-align: center; display: block; background: #64748b; color: #cbd5e1; padding: 10px; border-radius: 5px; font-weight: bold; cursor: not-allowed;">Sin Stock</span>
+                {% endif %}
+              </div>
+            </div>
+
+          </article>
+        {% else %}
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: rgba(30, 41, 59, 0.5); border-radius: 8px;">
+            <p style="font-size: 16px; color: #cbd5e1;">No se encontraron productos con los criterios seleccionados.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Ina-commerce — Proyecto HTML5 & CSS3</p>
+  </footer>
+
+</body>
+</html>

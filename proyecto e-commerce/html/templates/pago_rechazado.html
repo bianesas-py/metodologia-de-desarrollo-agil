@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago Rechazado - Ina-commerce</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f6f9; text-align: center; padding-top: 50px; }
+    .tarjeta-error { max-width: 450px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .icono { font-size: 60px; color: #dc3545; margin-bottom: 10px; }
+    .btn-reintentar { display: inline-block; margin-top: 20px; padding: 12px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; margin-right: 10px; }
+    .btn-volver { display: inline-block; margin-top: 20px; padding: 12px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="tarjeta-error">
+    <div class="icono">❌</div>
+    <h2>Transacción Rechazada</h2>
+    <p>No se ha podido procesar la compra en <strong>Ina-commerce</strong>.</p>
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+    <p><strong>Motivo:</strong> {{ motivo }}</p>
+    <p><strong>Estado:</strong> Pago no completado</p>
+    
+    <div>
+      <a href="/pago" class="btn-reintentar">Reintentar Pago</a>
+      <a href="/carrito" class="btn-volver">Volver al Carrito</a>
+    </div>
+  </div>
+
+</body>
+</html>

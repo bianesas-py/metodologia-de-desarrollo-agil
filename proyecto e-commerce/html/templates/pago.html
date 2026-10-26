@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulación de Pago - Ina-commerce</title>
+  <link rel="stylesheet" href="/static/pagina-principal.css">
+  <style>
+    .caja-pago {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      font-family: Arial, sans-serif;
+    }
+    .caja-pago h2 { text-align: center; color: #333; margin-bottom: 20px; }
+    .campo-pago { margin-bottom: 15px; }
+    .campo-pago label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; }
+    .campo-pago input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    .fila-doble { display: flex; gap: 10px; }
+    .btn-pagar { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    .btn-pagar:hover { background: #218838; }
+    .alerta-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 6px; margin-bottom: 15px; text-align: center; }
+    .tarjetas-prueba { background: #e9ecef; padding: 12px; border-radius: 6px; font-size: 13px; color: #495057; margin-bottom: 20px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+  <div style="padding: 15px 30px; background-color: #ff4747;">
+      <a href="/carrito" style="color: #fff; text-decoration: none; font-weight: bold; font-family: sans-serif;">← Volver al Carrito</a>
+  </div>
+
+  <div class="caja-pago">
+    <h2>💳 Pasarela de Pago (Simulación)</h2>
+
+    <div class="tarjetas-prueba">
+      <strong>📌 Modos de prueba:</strong><br>
+      • <strong>Pago Aprobado:</strong> Usar tarjeta <code>4532 1234 5678 9010</code> (CVV 123)<br>
+      • <strong>Pago Rechazado:</strong> Usar tarjeta terminada en <code>0000</code> o CVV <code>000</code>
+    </div>
+
+    {% if error %}
+      <div class="alerta-error">{{ error }}</div>
+    {% endif %}
+
+    <form action="/pago" method="POST">
+      <div class="campo-pago">
+        <label for="titular">Nombre en la tarjeta:</label>
+        <input type="text" id="titular" name="titular" placeholder="Ej: Manuel Pérez" required>
+      </div>
+
+      <div class="campo-pago">
+        <label for="numero_tarjeta">Número de tarjeta:</label>
+        <input type="text" id="numero_tarjeta" name="numero_tarjeta" maxlength="19" placeholder="4532 1234 5678 9010" required>
+      </div>
+
+      <div class="fila-doble">
+        <div class="campo-pago" style="flex: 1;">
+          <label for="expiracion">Vencimiento:</label>
+          <input type="text" id="expiracion" name="expiracion" placeholder="MM/AA" maxlength="5" required>
+        </div>
+        <div class="campo-pago" style="flex: 1;">
+          <label for="cvv">CVV:</label>
+          <input type="password" id="cvv" name="cvv" maxlength="4" placeholder="123" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-pagar">Procesar Pago</button>
+    </form>
+  </div>
+
+</body>
+</html>
